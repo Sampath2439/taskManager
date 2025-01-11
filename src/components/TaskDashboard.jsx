@@ -78,7 +78,7 @@ const TaskDashboard = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       const response = await fetch(`${API_URL}/${id}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
