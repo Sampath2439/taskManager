@@ -123,56 +123,56 @@ const TaskDashboard = () => {
         </div>
       )}
 
-      {/* Task Table/Cards */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        
-          <div className="hidden md:block">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Task Name</th>
-            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completed At</th>
-            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {tasks.map((task, index) => (
-            <tr
-              key={task.id}
-              className={task.status === 'Completed' ? 'line-through text-gray-400' : ''}
-            >
-              <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{index + 1}</td>
-              <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{task.name}</td>
-              <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                <StatusDropdown
-                  status={task.status}
-                  onStatusChange={(newStatus) => handleStatusChange(task.id, newStatus)}
-                />
-              </td>
-              <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
-                {new Date().toLocaleString()}
-              </td>
-              <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
-                {task.completed_at ? new Date(task.completed_at).toLocaleString() : 'To be Completed'}
-              </td>
-              <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
-                <button
-                  onClick={() => handleDelete(task.id)}
-                  className="text-red-600 hover:text-red-900"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      {/* /* Task Table/Cards */}
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          
+            <div className="hidden md:block">
+          <table className="min-w-full">
+            <thead className="bg-gray-50">
+              <tr>
+          <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+          <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Task Name</th>
+          <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+          <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completed At</th>
+          <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {tasks.map((task, index) => (
+          <tr
+            key={task.id}
+            className={task.status === 'Completed' ? 'line-through text-gray-400' : ''}
+          >
+            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{index + 1}</td>
+            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{task.name}</td>
+            <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+              <StatusDropdown
+            status={task.status}
+            onStatusChange={(newStatus) => handleStatusChange(task.id, newStatus)}
+              />
+            </td>
+            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+              {task.created_at ? new Date(task.created_at._seconds * 1000).toLocaleString() : 'N/A'}
+            </td>
+            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+              {task.completed_at ? new Date(task.completed_at._seconds * 1000).toLocaleString() : 'To be Completed'}
+            </td>
+            <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+              <button
+            onClick={() => handleDelete(task.id)}
+            className="text-red-600 hover:text-red-900"
+              >
+            Delete
+              </button>
+            </td>
+          </tr>
+              ))}
+            </tbody>
+          </table>
+            </div>
 
-          {/* Mobile View */}
+            {/* Mobile View */}
             <div className="md:hidden">
               {tasks.map((task, index) => (
                 <div
