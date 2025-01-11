@@ -3,7 +3,6 @@ import { PlusIcon, XIcon } from 'lucide-react';
 import { Alert, AlertDescription } from './Alert';
 import StatusDropdown from './statusDropdown';
 
-
 const API_URL = 'http://localhost:5000/api/tasks';
 
 const TaskDashboard = () => {
@@ -40,7 +39,7 @@ const TaskDashboard = () => {
     };
 
     try {
-      const response = await fetch(`${API_URL}/tasks`, {
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +61,7 @@ const TaskDashboard = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/tasks/${id}`, {
+      const response = await fetch(`${API_URL}/${id}`, {
         method: 'DELETE',
       });
       
@@ -78,12 +77,15 @@ const TaskDashboard = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await fetch(`${API_URL}/tasks/${id}`, {
+      const response = await fetch(`${API_URL}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ 
+          status: newStatus,
+          completed_at: newStatus === 'Completed' ? new Date().toISOString() : null
+        }),
       });
       
       if (!response.ok) throw new Error('Failed to update task status');
@@ -123,93 +125,93 @@ const TaskDashboard = () => {
 
       {/* Task Table/Cards */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        {/* Desktop Table View */}
-        <div className="hidden md:block">
-          <table className="min-w-full">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Task Name</th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completed At</th>
-                <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {tasks.map((task,index) => (
-                <tr
-                  key={task.id}
-                  className={task.status === 'Completed' ? 'line-through text-gray-400' : ''}
-                >
-                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{index+1}</td>
-                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{task.name}</td>
-                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                    <StatusDropdown
-                      status={task.status}
-                      onStatusChange={(newStatus) => handleStatusChange(task.id, newStatus)}
-                    />
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
-                    {new Date(task.created_at).toLocaleString()}
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
-                    {task.completed_at ? new Date(task.completed_at).toLocaleString() : 'To be Completed'}
-                  </td>
-                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
-                    <button
-                      onClick={() => handleDelete(task.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      Delete
-                    </button>
-                  </td>
+        
+          <div className="hidden md:block">
+            <table className="min-w-full">
+              <thead className="bg-gray-50">
+                <tr>
+            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Task Name</th>
+            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completed At</th>
+            <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Mobile Card View */}
-        <div className="md:hidden">
-          {tasks.map((task,index) => (
-            <div
-              key={index++}
-              className={`p-4 border-b ${task.status === 'Completed' ? 'line-through text-gray-400' : ''}`}
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {tasks.map((task, index) => (
+            <tr
+              key={task.id}
+              className={task.status === 'Completed' ? 'line-through text-gray-400' : ''}
             >
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <span className="text-sm text-gray-500">#{task.id}</span>
-                  <h3 className="font-medium text-gray-900">{task.name}</h3>
-                </div>
+              <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{index + 1}</td>
+              <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{task.name}</td>
+              <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                <StatusDropdown
+                  status={task.status}
+                  onStatusChange={(newStatus) => handleStatusChange(task.id, newStatus)}
+                />
+              </td>
+              <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+                {new Date().toLocaleString()}
+              </td>
+              <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+                {task.completed_at ? new Date(task.completed_at).toLocaleString() : 'To be Completed'}
+              </td>
+              <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
                 <button
                   onClick={() => handleDelete(task.id)}
-                  className="text-red-600 hover:text-red-900 text-sm"
+                  className="text-red-600 hover:text-red-900"
                 >
                   Delete
                 </button>
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">Status:</span>
-                  <StatusDropdown
-                    status={task.status}
-                    onStatusChange={(newStatus) => handleStatusChange(task.id, newStatus)}
-                  />
-                </div>
-                <div className="text-sm text-gray-500">
-                  Created: {new Date(task.created_at).toLocaleString()}
-                </div>
-                <div className="text-sm text-gray-500">
-                  Completed: {task.completed_at ? new Date(task.completed_at).toLocaleString() : 'N/A'}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+              </td>
+            </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-      {/* Add Task Modal */}
+          {/* Mobile View */}
+            <div className="md:hidden">
+              {tasks.map((task, index) => (
+                <div
+                  key={task.id}
+                  className={`p-4 border-b ${task.status === 'Completed' ? 'line-through text-gray-400' : ''}`}
+                >
+                  <div className="flex justify-between items-start mb-2">
+              <div>
+                <span className="text-sm text-gray-500">#{index+1}</span>
+                <h3 className="font-medium text-gray-900">{task.name}</h3>
+              </div>
+              <button
+                onClick={() => handleDelete(task.id)}
+                className="text-red-600 hover:text-red-900 text-sm"
+              >
+                Delete
+              </button>
+                  </div>
+                  <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-500">Status:</span>
+                <StatusDropdown
+                  status={task.status}
+                  onStatusChange={(newStatus) => handleStatusChange(task.id, newStatus)}
+                />
+              </div>
+              <div className="text-sm text-gray-500">
+                Created: {new Date().toLocaleString()}
+              </div>
+              <div className="text-sm text-gray-500">
+                Completed: {task.completed_at ? new Date(task.completed_at).toLocaleString() : 'To be Completed'}
+              </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+                </div>
+
+                {/* Add Task Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
