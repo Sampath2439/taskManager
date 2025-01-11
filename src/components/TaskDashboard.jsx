@@ -3,7 +3,7 @@ import { PlusIcon, XIcon } from 'lucide-react';
 import { Alert, AlertDescription } from './Alert';
 import StatusDropdown from './statusDropdown';
 
-const API_URL = 'http://localhost:5000/api/tasks';
+const API_URL = 'https://taskmanagerbackend-production-0e25.up.railway.app/api/tasks';
 
 const TaskDashboard = () => {
   const [tasks, setTasks] = useState([]);
