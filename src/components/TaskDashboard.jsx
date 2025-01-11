@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { PlusIcon, XIcon } from 'lucide-react';
 import { Alert, AlertDescription } from './Alert';
 import StatusDropdown from './statusDropdown';
-import { db } from './firebase-config';
-import { collection, addDoc, getDocs, deleteDoc, updateDoc } from 'firebase/firestore';
+
+
+const API_URL = 'http://localhost:5000/api/tasks';
 
 const TaskDashboard = () => {
   const [tasks, setTasks] = useState([]);
@@ -12,13 +13,14 @@ const TaskDashboard = () => {
   const [notification, setNotification] = useState(null);
 
   const fetchTasks = async () => {
-    const tasksCollection = collection(db, 'tasks');
-    const tasksSnapshot = await getDocs(tasksCollection);
-    const tasksList = tasksSnapshot.docs.map((doc, index) => ({
-      id: index + 1,
-      ...doc.data(),
-    }));
-    setTasks(tasksList);
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      showNotification('Error fetching tasks!');
+    }
   };
 
   useEffect(() => {
@@ -35,13 +37,20 @@ const TaskDashboard = () => {
     const task = {
       name: newTask.name,
       status: newTask.status,
-      created_at: new Date().toISOString(),
-      completed_at: null,
     };
 
     try {
-      await addDoc(collection(db, 'tasks'), task);
-      fetchTasks();
+      const response = await fetch(`${API_URL}/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(task),
+      });
+      
+      if (!response.ok) throw new Error('Failed to add task');
+      
+      await fetchTasks();
       setNewTask({ name: '', status: 'Pending' });
       setIsModalOpen(false);
       showNotification('Task added successfully!');
@@ -51,13 +60,15 @@ const TaskDashboard = () => {
     }
   };
 
-  const handleDelete = async (index) => {
+  const handleDelete = async (id) => {
     try {
-      const tasksCollection = collection(db, 'tasks');
-      const tasksSnapshot = await getDocs(tasksCollection);
-      const taskDoc = tasksSnapshot.docs[index - 1];
-      await deleteDoc(taskDoc.ref);
-      fetchTasks();
+      const response = await fetch(`${API_URL}/tasks/${id}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) throw new Error('Failed to delete task');
+      
+      await fetchTasks();
       showNotification('Task deleted successfully!');
     } catch (error) {
       console.error('Error deleting task:', error);
@@ -65,26 +76,19 @@ const TaskDashboard = () => {
     }
   };
 
-  const handleStatusChange = async (index, newStatus) => {
+  const handleStatusChange = async (id, newStatus) => {
     try {
-      const tasksCollection = collection(db, 'tasks');
-      const tasksSnapshot = await getDocs(tasksCollection);
-      const taskDoc = tasksSnapshot.docs[index - 1];
-      const updatedTask = {
-        status: newStatus,
-        completed_at: newStatus === 'Completed' ? new Date().toISOString() : null,
-      };
-      await updateDoc(taskDoc.ref, updatedTask);
+      const response = await fetch(`${API_URL}/tasks/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
       
-      if (newStatus === 'Completed') {
-        await addDoc(collection(db, 'completed_tasks'), {
-          id: index,
-          name: taskDoc.data().name,
-          completed_at: updatedTask.completed_at,
-        });
-      }
-
-      fetchTasks();
+      if (!response.ok) throw new Error('Failed to update task status');
+      
+      await fetchTasks();
       showNotification(
         newStatus === 'Completed' ? 'Task marked as completed!' : 'Task status updated!'
       );
@@ -133,12 +137,12 @@ const TaskDashboard = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {tasks.map((task) => (
+              {tasks.map((task,index) => (
                 <tr
                   key={task.id}
                   className={task.status === 'Completed' ? 'line-through text-gray-400' : ''}
                 >
-                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{task.id}</td>
+                  <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{index+1}</td>
                   <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">{task.name}</td>
                   <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                     <StatusDropdown
@@ -168,9 +172,9 @@ const TaskDashboard = () => {
 
         {/* Mobile Card View */}
         <div className="md:hidden">
-          {tasks.map((task) => (
+          {tasks.map((task,index) => (
             <div
-              key={task.id}
+              key={index++}
               className={`p-4 border-b ${task.status === 'Completed' ? 'line-through text-gray-400' : ''}`}
             >
               <div className="flex justify-between items-start mb-2">
