@@ -40,8 +40,6 @@ const TaskDashboard = () => {
       status: newTask.status,
     };
 
-
-    //added
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -120,7 +118,7 @@ const TaskDashboard = () => {
 
       {/* Notification */}
       {notification && (
-        <div className="fixed top-4 right-4 left-4 sm:left-auto z-50 fade-in">
+        <div className="fixed top-4 right-4 left-4 sm:left-auto z-50">
           <Alert className="bg-green-100 border-green-400 text-green-800">
             <AlertDescription>{notification}</AlertDescription>
           </Alert>
@@ -128,8 +126,8 @@ const TaskDashboard = () => {
       )}
 
       {/* Task Table/Cards */}
-      <div className="bg-white rounded-lg shadow overflow-hidden max-h-dvh sm:max-h-80vh">
-        <div className="hidden md:block">
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="hidden lg:block">
           <table className="min-w-full">
             <thead className="bg-gray-50">
               <tr>
@@ -176,15 +174,15 @@ const TaskDashboard = () => {
         </div>
 
         {/* Mobile View */}
-        <div className="block md:hidden">
+        <div className="block lg:hidden">
           {tasks.map((task, index) => (
             <div
               key={task.id}
-              className={`p-4 border-b ${task.status === 'Completed' ? 'line-through text-gray-400' : ''} slide-in`}
+              className={`p-4 border-b ${task.status === 'Completed' ? 'line-through text-gray-400' : ''}`}
             >
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <span className="text-sm text-gray-500">#{index + 1}</span>
+                  <span className="text-sm text-gray-500">Task #{index + 1}</span>
                   <h3 className="font-medium text-gray-900">{task.name}</h3>
                 </div>
                 <button
@@ -203,10 +201,10 @@ const TaskDashboard = () => {
                   />
                 </div>
                 <div className="text-sm text-gray-500">
-                  Created: {new Date().toLocaleString()}
+                  Created: {new Date(task.created_at._seconds * 1000).toLocaleString()}
                 </div>
                 <div className="text-sm text-gray-500">
-                  Completed: {task.completed_at ? new Date(task.completed_at).toLocaleString() : 'To be Completed'}
+                  Completed: {task.completed_at ? new Date(task.completed_at._seconds * 1000).toLocaleString() : 'To be Completed'}
                 </div>
               </div>
             </div>
@@ -216,7 +214,7 @@ const TaskDashboard = () => {
 
       {/* Add Task Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 fade-in">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl sm:text-2xl font-bold">Add New Task</h2>
