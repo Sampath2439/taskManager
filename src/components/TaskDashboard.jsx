@@ -40,6 +40,8 @@ const TaskDashboard = () => {
       status: newTask.status,
     };
 
+
+    //added
     try {
       const response = await fetch(API_URL, {
         method: 'POST',
@@ -118,7 +120,7 @@ const TaskDashboard = () => {
 
       {/* Notification */}
       {notification && (
-        <div className="fixed top-4 right-4 left-4 sm:left-auto z-50">
+        <div className="fixed top-4 right-4 left-4 sm:left-auto z-50 fade-in">
           <Alert className="bg-green-100 border-green-400 text-green-800">
             <AlertDescription>{notification}</AlertDescription>
           </Alert>
@@ -126,7 +128,7 @@ const TaskDashboard = () => {
       )}
 
       {/* Task Table/Cards */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow overflow-hidden max-h-dvh sm:max-h-80vh">
         <div className="hidden md:block">
           <table className="min-w-full">
             <thead className="bg-gray-50">
@@ -174,11 +176,11 @@ const TaskDashboard = () => {
         </div>
 
         {/* Mobile View */}
-        <div className="md:hidden">
+        <div className="block md:hidden">
           {tasks.map((task, index) => (
             <div
               key={task.id}
-              className={`p-4 border-b ${task.status === 'Completed' ? 'line-through text-gray-400' : ''}`}
+              className={`p-4 border-b ${task.status === 'Completed' ? 'line-through text-gray-400' : ''} slide-in`}
             >
               <div className="flex justify-between items-start mb-2">
                 <div>
@@ -214,7 +216,7 @@ const TaskDashboard = () => {
 
       {/* Add Task Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 fade-in">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl sm:text-2xl font-bold">Add New Task</h2>
