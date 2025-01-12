@@ -10,13 +10,13 @@ const StatusDropdown = ({ status, onStatusChange }) => {
     const getStatusColor = (status) => {
         switch(status) {
             case 'Completed':
-                return 'bg-green-100 text-green-800';
+                return 'bg-green-100 text-green-800 sm:text-xl lg:text-sm';
             case 'In Progress':
-                return 'bg-yellow-100 text-yellow-800';
+                return 'bg-yellow-100 text-yellow-800 sm:text-xl lg:text-sm';
             case 'Pending':
-                return 'bg-red-100 text-red-800';
+                return 'bg-red-100 text-red-800 sm:text-xl lg:text-sm';
             default:
-                return 'bg-gray-100 text-gray-800';
+                return 'bg-gray-100 text-gray-800 sm:text-xl lg:text-sm';
         }
     };
 
@@ -73,7 +73,7 @@ const StatusDropdown = ({ status, onStatusChange }) => {
                                     }}
                                     className={`${
                                         status === option ? '' : ''
-                                    } text-center block px-4 py-2 text-sm text-gray-700`}
+                                    } text-center block px-4 py-2 sm:text-xl lg:text-sm text-gray-700`}
                                     role="menuitem"
                                 >
                                     {option}
