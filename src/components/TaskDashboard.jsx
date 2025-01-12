@@ -104,17 +104,6 @@ const TaskDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
-      {/* Header */}
-      <div className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Task Dashboard</h1>
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center justify-center sm:justify-start gap-2 hover:bg-blue-700 transition w-full sm:w-auto"
-        >
-          <PlusIcon size={20} />
-          Add Task
-        </button>
-      </div>
 
       {/* Notification */}
       {notification && (
@@ -126,10 +115,22 @@ const TaskDashboard = () => {
       )}
 
       {/* Task Table/Cards */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Header */}
+      <div className="mb-6 flex flex-row justify-between items-center gap-4 hidden lg:flex">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 w-auto">Task Dashboard</h1>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center justify-center sm:justify-start gap-2 hover:bg-blue-700 transition sm:w-auto"
+        >
+          <PlusIcon size={20} />
+          Add Task
+        </button>
+      </div>
+
+      <div className="rounded-lg lg:shadow overflow-hidden">
         <div className="hidden lg:block">
           <table className="min-w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                 <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Task Name</th>
@@ -139,7 +140,7 @@ const TaskDashboard = () => {
                 <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-100">
               {tasks.map((task, index) => (
                 <tr
                   key={task.id}
@@ -174,37 +175,47 @@ const TaskDashboard = () => {
         </div>
 
         {/* Mobile View */}
-        <div className="block lg:hidden">
+        <div className="mb-6 flex flex-col sm:flex-column sm:justify-center sm:items-center gap-4 block lg:hidden">
+          <h1 className="text-5xl font-bold text-gray-800 w-full text-center">Task Dashboard</h1>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-600 text-white text-3xl px-4 py-6 rounded-3xl flex items-center justify-center gap-2 hover:bg-blue-700 transition w-full"
+          >
+            <PlusIcon size={20} />
+            Add Task
+          </button>
+        </div>
+
+        <div className="block lg:hidden bg-white border border-gray-200 shadow-lg rounded-lg">
           {tasks.map((task, index) => (
             <div
               key={task.id}
               className={`p-4 border-b ${task.status === 'Completed' ? 'line-through text-gray-400' : ''}`}
-              style={{ fontSize: '1.25rem' }} // Increase font size for mobile view
             >
               <div className="flex justify-between items-start mb-2">
                 <div>
-                  <span className="text-sm text-gray-500">Task #{index + 1}</span>
-                  <h3 className="font-medium text-gray-900">{task.name}</h3>
+                  <span className="text-xl text-gray-500">Task #{index + 1}</span>
+                  <h3 className={`mt-2 text-2xl ${task.status === 'Completed' ? 'font-medium line-through text-gray-400' : 'font-bold text-gray-900'}`}>{task.name}</h3>
                 </div>
                 <button
                   onClick={() => handleDelete(task.id)}
-                  className="text-red-600 hover:text-red-900 text-sm"
+                  className="text-red-600 hover:text-red-900 text-xl"
                 >
                   Delete
                 </button>
               </div>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">Status:</span>
+                  <span className="text-xl text-gray-500">Status:</span>
                   <StatusDropdown
                     status={task.status}
                     onStatusChange={(newStatus) => handleStatusChange(task.id, newStatus)}
                   />
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className="text-xl text-gray-500">
                   Created: {new Date(task.created_at._seconds * 1000).toLocaleString()}
                 </div>
-                <div className="text-sm text-gray-500">
+                <div className="text-xl text-gray-500">
                   Completed: {task.completed_at ? new Date(task.completed_at._seconds * 1000).toLocaleString() : 'To be Completed'}
                 </div>
               </div>
