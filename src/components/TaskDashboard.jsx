@@ -179,6 +179,7 @@ const TaskDashboard = () => {
             <div
               key={task.id}
               className={`p-4 border-b ${task.status === 'Completed' ? 'line-through text-gray-400' : ''}`}
+              style={{ fontSize: '1.25rem' }} // Increase font size for mobile view
             >
               <div className="flex justify-between items-start mb-2">
                 <div>
