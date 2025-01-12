@@ -125,7 +125,7 @@ const TaskDashboard = () => {
         </div>
       )}
 
-      {/* Task Table/Cards */}
+      {/* Task Table/Cards responsive */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="hidden lg:block">
           <table className="min-w-full">
