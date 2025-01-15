@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PlusIcon, XIcon } from 'lucide-react';
-import { Alert, AlertDescription } from './Alert';
 import StatusDropdown from './statusDropdown';
+import Toast from './Toast'; // Import the new Toast component
 
 const API_URL = 'https://taskmanagerbackend-production-0e25.up.railway.app/api/tasks';
 
@@ -10,6 +10,7 @@ const TaskDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newTask, setNewTask] = useState({ name: '', status: 'Pending' });
   const [notification, setNotification] = useState(null);
+  const [notificationType, setNotificationType] = useState('success'); // Add this for toast type
 
   const fetchTasks = async () => {
     try {
@@ -18,7 +19,7 @@ const TaskDashboard = () => {
       setTasks(data);
     } catch (error) {
       console.error('Error fetching tasks:', error);
-      showNotification('Error fetching tasks!');
+      showNotification('Error fetching tasks!', 'error');
     }
   };
 
@@ -28,9 +29,13 @@ const TaskDashboard = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const showNotification = (message) => {
+  const showNotification = (message, type = 'success') => {
     setNotification(message);
-    setTimeout(() => setNotification(null), 3000);
+    setNotificationType(type);
+    setTimeout(() => {
+      setNotification(null);
+      setNotificationType('success');
+    }, 3000);
   };
 
   const handleSubmit = async (e) => {
@@ -54,10 +59,10 @@ const TaskDashboard = () => {
       await fetchTasks();
       setNewTask({ name: '', status: 'Pending' });
       setIsModalOpen(false);
-      showNotification('Task added successfully!');
+      showNotification('Task added successfully!', 'success');
     } catch (error) {
       console.error('Error adding task:', error);
-      showNotification('Error adding task!');
+      showNotification('Error adding task!', 'error');
     }
   };
 
@@ -70,10 +75,10 @@ const TaskDashboard = () => {
       if (!response.ok) throw new Error('Failed to delete task');
       
       await fetchTasks();
-      showNotification('Task deleted successfully!');
+      showNotification('Task deleted successfully!', 'success');
     } catch (error) {
       console.error('Error deleting task:', error);
-      showNotification('Error deleting task!');
+      showNotification('Error deleting task!', 'error');
     }
   };
 
@@ -94,28 +99,27 @@ const TaskDashboard = () => {
       
       await fetchTasks();
       showNotification(
-        newStatus === 'Completed' ? 'Task marked as completed!' : 'Task status updated!'
+        newStatus === 'Completed' ? 'Task marked as completed!' : 'Task status updated!',
+        'success'
       );
     } catch (error) {
       console.error('Error updating task status:', error);
-      showNotification('Error updating task status!');
+      showNotification('Error updating task status!', 'error');
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
-
-      {/* Notification */}
+      {/* New Toast Notification */}
       {notification && (
-        <div className="fixed top-4 right-4 left-4 sm:left-auto z-50">
-          <Alert className="bg-green-100 border-green-400 text-green-800">
-            <AlertDescription>{notification}</AlertDescription>
-          </Alert>
-        </div>
+        <Toast 
+          message={notification}
+          type={notificationType}
+          onClose={() => setNotification(null)}
+        />
       )}
 
-      {/* Task Table/Cards */}
-      {/* Header */}
+      {/* Rest of the component remains the same */}
       <div className="mb-6 flex flex-row justify-between items-center gap-4 hidden lg:flex">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 w-auto">Task Dashboard</h1>
         <button
