@@ -1,15 +1,16 @@
+
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCkywH8qAR6O-j7mkvtcG-SpiIsRgvrRHc",
-  authDomain: "taskmanagement-d4abb.firebaseapp.com",
-  databaseURL: "https://taskmanagement-d4abb-default-rtdb.firebaseio.com",
-  projectId: "taskmanagement-d4abb",
-  storageBucket: "taskmanagement-d4abb.firebasestorage.app",
-  messagingSenderId: "153946338136",
-  appId: "1:153946338136:web:98d9c4b753b0cc9f82ab2d",
-  measurementId: "G-L1DXZTBBSE"
+  apiKey: "AIzaSyBQN1h5NTK3Q-k-qXh7waUUD1XPAPS4sJw",
+  authDomain: "dbtask-22b75.firebaseapp.com",
+  projectId: "dbtask-22b75",
+  storageBucket: "dbtask-22b75.firebasestorage.app",
+  messagingSenderId: "293901222779",
+  appId: "1:293901222779:web:9a441e22930f73619133de",
+  measurementId: "G-D3Y02Y0GX6"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
