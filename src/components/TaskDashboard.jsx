@@ -3,7 +3,7 @@ import { PlusIcon, XIcon } from 'lucide-react';
 import StatusDropdown from './statusDropdown';
 import Toast from './Toast'; // Import the new Toast component
 
-const API_URL = 'https://taskmanagerbackend-production-0e25.up.railway.app/api/tasks';
+const API_URL = 'taskmanagerbackend-production-b37e.up.railway.app/api/tasks';
 
 const TaskDashboard = () => {
   const [tasks, setTasks] = useState([]);
